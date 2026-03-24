@@ -51,16 +51,16 @@ export function AccessForm() {
       <CardHeader className="space-y-4 pt-10 pb-2 px-8 flex flex-col items-center">
             <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full opacity-10 pointer-events-none" />
             
-            <div className="bg-primary/5 p-6 rounded-[2.5rem] border border-primary/20 shadow-2xl shadow-primary/5 mb-6 relative group flex justify-center items-center w-fit mx-auto transition-transform hover:scale-110 duration-500">
+            <div className="bg-primary/5 p-6 rounded-[2.5rem] border border-white/10 shadow-2xl relative group flex justify-center items-center w-fit mx-auto transition-transform hover:scale-110 duration-500">
               <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full opacity-50 transition-opacity" />
-              <ShieldCheck className="h-12 w-12 text-primary relative z-10" />
+              <img src="/logos/logo-learning.png" alt="Learning Heroes" className="h-12 w-auto relative z-10 invert brightness-0" />
             </div>
 
             <div className="space-y-3 mb-6 text-center">
               <h2 className="text-4xl font-black text-white tracking-tighter uppercase leading-none">
                 Acceso <span className="text-primary">Alumnos</span>
               </h2>
-              <p className="text-zinc-200 font-black text-[12px] uppercase tracking-[0.3em] opacity-80">IA Heroes Pro University Program</p>
+              <p className="text-zinc-200 font-black text-[12px] uppercase tracking-[0.3em] opacity-80 decoration-primary decoration-2 underline-offset-4">Learning Heroes</p>
             </div>
       </CardHeader>
       
@@ -84,7 +84,7 @@ export function AccessForm() {
             <div className="flex items-center space-x-2 px-1">
                <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
                <p className="text-[11px] text-zinc-300 font-bold uppercase tracking-tight">
-                 Seguridad de identidad nivel 2 activa
+                 Accede con el mismo email con el que te apuntaste a Learning Heroes
                </p>
             </div>
           </div>
