@@ -22,11 +22,12 @@ export default async function AdminPage({ searchParams }: PageProps) {
 
   // Guard de Email de admin (normalizado para evitar fallos de mayúsculas/minúsculas)
   const userEmail = session?.email?.toLowerCase() || ''
-  const isAuthorizedEmail = userEmail.includes('learningheroes.com') || userEmail.includes('admin')
+  const isTeamEmail = userEmail.endsWith('learningheroes.com')
   const isCorrectPassword = pwd === 'Diegoperez95'
 
-  if (!isAuthorizedEmail || !isCorrectPassword) {
-    if (!isAuthorizedEmail) redirect('/dashboard')
+  // Si es del equipo, entra directo. Si no es del equipo, necesita la clave maestra.
+  if (!isTeamEmail && !isCorrectPassword) {
+    if (!isTeamEmail && !userEmail.includes('admin')) redirect('/dashboard')
 
     return (
       <div className="min-h-screen bg-[#111111] flex items-center justify-center p-6 text-white text-center">

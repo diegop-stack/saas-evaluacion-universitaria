@@ -11,25 +11,30 @@ export async function POST(request: Request) {
 
   const normalizedEmail = email.toLowerCase()
 
-  // Verificamos si existe el perfil autorizado usando el cliente ADMIN
-  // El cliente normal fallaría por RLS porque el usuario aún no tiene sesión de Auth
-  const { data: profile, error } = await supabaseAdmin
+  // Autorización automática por dominio para el equipo
+  const isTeamEmail = normalizedEmail.endsWith('@learningheroes.com')
+
+  // Verificamos si existe el perfil autorizado
+  let { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('*')
     .eq('email', normalizedEmail)
     .single()
 
-  if (error || !profile?.is_authorized) {
+  // Si no está autorizado y NO es del equipo, bloqueamos
+  if ((!profile || !profile.is_authorized) && !isTeamEmail) {
     return NextResponse.json({ error: 'Tu email no está registrado o no está autorizado al examen.' }, { status: 401 })
   }
 
-  // Guardamos la sesión
-  await setSession({
-    id: profile.id,
-    email: profile.email,
-    full_name: profile.full_name,
-    is_authorized: profile.is_authorized
-  })
+  // Si es del equipo y el perfil no existe, podemos crear uno básico o usar datos por defecto
+  const sessionData = {
+    id: profile?.id || 'admin-temp-id',
+    email: normalizedEmail,
+    full_name: profile?.full_name || 'Admin Team',
+    is_authorized: true
+  }
+
+  await setSession(sessionData)
 
   // Retornamos si ya tiene identidad completa para saltar la página de acreditación
   const hasIdentity = profile.full_name && profile.dni && profile.nationality
