@@ -9,7 +9,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
   }
 
-  const normalizedEmail = email.toLowerCase()
+  // Limpieza profunda de espacios y minúsculas
+  const normalizedEmail = email.trim().toLowerCase()
 
   // Autorización automática por dominio para el equipo
   const isTeamEmail = normalizedEmail.endsWith('@learningheroes.com')

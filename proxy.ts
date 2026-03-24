@@ -4,7 +4,7 @@ import { jwtVerify } from 'jose'
 const secretKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'default-secret-key-ia-heroes'
 const key = new TextEncoder().encode(secretKey)
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const sessionToken = request.cookies.get('ia_heroes_session')?.value
   const { pathname } = request.nextUrl
 
