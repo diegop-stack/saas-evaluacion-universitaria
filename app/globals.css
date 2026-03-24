@@ -28,11 +28,12 @@
 }
 
 :root {
-  --background: #111111;
+  --background: #18181b;
   --foreground: #ffffff;
-  --card: #09090b;
+  --card: #1c1c1e;
   --card-foreground: #ffffff;
-  --popover: #09090b;
+  --popover: #1c1c1e;
+
   --popover-foreground: #ffffff;
   --primary: #243F4C;
   --primary-foreground: #ffffff;
@@ -49,9 +50,10 @@
 }
 
 .dark {
-  --background: #111111;
+  --background: #18181b;
   --foreground: #ffffff;
-  --card: #09090b;
+  --card: #1c1c1e;
+
   --card-foreground: #ffffff;
   --primary: #243F4C;
   --secondary: #FF2878;
@@ -64,7 +66,7 @@
   }
   html {
     @apply antialiased scroll-smooth;
-    background-color: #111111; /* Clearly softened black */
+    background-color: var(--background); /* Clearly softened black */
   }
   body {
     @apply bg-background text-foreground selection:bg-secondary/30 selection:text-white font-sans;

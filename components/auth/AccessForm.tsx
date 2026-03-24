@@ -60,7 +60,6 @@ export function AccessForm() {
               <h2 className="text-4xl font-black text-white tracking-tighter uppercase leading-none">
                 Acceso <span className="text-primary">Alumnos</span>
               </h2>
-              <p className="text-zinc-200 font-black text-[12px] uppercase tracking-[0.3em] opacity-80 decoration-primary decoration-2 underline-offset-4">Learning Heroes</p>
             </div>
       </CardHeader>
       

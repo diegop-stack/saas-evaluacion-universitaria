@@ -136,7 +136,8 @@ export function ExamClient({ exam, attempt, questions }: ExamClientProps) {
   const currentQuestion = questions[currentIdx]
 
   return (
-    <div className="min-h-screen bg-[#111111] pb-24 font-sans text-white selection:bg-secondary/30">
+    <div className="min-h-screen bg-background pb-24 font-sans text-white selection:bg-secondary/30">
+
       <TabWarning 
         isOpen={isTabWarningOpen} 
         onConfirm={() => setIsTabWarningOpen(false)} 
@@ -162,7 +163,7 @@ export function ExamClient({ exam, attempt, questions }: ExamClientProps) {
                    <span className="text-[9px] font-black text-zinc-400 uppercase tracking-[0.2em] leading-none mb-1">Certificación Oficial</span>
                 </div>
                 <h1 className="text-sm md:text-base font-black text-zinc-900 lg:text-primary uppercase tracking-tighter truncate max-w-[120px] sm:max-w-xs leading-none">
-                  {exam.title}
+                  IA HEROES PRO 9
                 </h1>
               </div>
           </div>
@@ -298,7 +299,7 @@ export function ExamClient({ exam, attempt, questions }: ExamClientProps) {
       </main>
 
       {tabSwitchCount > 0 && (
-        <div className="fixed bottom-10 right-10 bg-[#111111] border border-red-500/50 p-6 rounded-3xl flex items-center shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-5">
+        <div className="fixed bottom-10 right-10 bg-[var(--background)] border border-red-500/50 p-6 rounded-3xl flex items-center shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-5">
           <div className="bg-red-500/10 p-3 rounded-xl mr-5">
             <AlertCircle className="h-6 w-6 text-red-500 animate-pulse" />
           </div>

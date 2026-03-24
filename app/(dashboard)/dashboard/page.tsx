@@ -46,7 +46,8 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="min-h-screen bg-[#111111] flex flex-col font-sans selection:bg-secondary/30">
+    <div className="min-h-screen bg-background flex flex-col font-sans selection:bg-secondary/30">
+
       <LogoHeader />
       
       <main className="flex-1 py-16 px-6 md:py-24">
@@ -60,24 +61,24 @@ export default async function DashboardPage() {
              <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase leading-[0.9]">
                 Acceso al <span className="text-primary">Campus</span>
              </h1>
-             <p className="text-zinc-500 text-sm md:text-base font-medium max-w-xl mx-auto leading-relaxed">
-                Selecciona tu programa de certificación oficial. Al finalizar, tu título de <span className="text-zinc-300">Learning Heroes</span> será emitido de forma automática con plena validez.
-             </p>
+
           </div>
 
           {/* Exams Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto mb-24">
             {exams?.map((exam) => (
-              <Card key={exam.id} className="bg-[#111111] border border-white/[0.05] group overflow-hidden flex flex-col hover:border-primary/40 transition-all duration-700 shadow-2xl rounded-[2.5rem]">
+              <Card key={exam.id} className="bg-card border border-white/[0.05] group overflow-hidden flex flex-col hover:border-primary/40 transition-all duration-700 shadow-2xl rounded-[2.5rem]">
+
                 <div className="h-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50 opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
                 <CardHeader className="pt-10 px-10">
                   <div className="flex items-center justify-between mb-6">
-                     <Badge variant="outline" className="text-[9px] font-black uppercase bg-primary/10 text-primary border-none px-3 py-1 tracking-widest rounded-md">
+                     <Badge variant="outline" className="text-[10px] font-black uppercase bg-primary text-white border-none px-4 py-1.5 tracking-widest rounded-full shadow-[0_0_20px_rgba(36,63,76,0.5)]">
                         Programa Oficial
                      </Badge>
-                     <Trophy className="h-5 w-5 text-zinc-800 group-hover:text-primary transition-colors duration-500" />
+                     <Trophy className="h-6 w-6 text-white group-hover:text-primary transition-colors duration-500 shadow-2xl" />
                   </div>
-                  <CardTitle className="text-3xl font-black text-white leading-none uppercase tracking-tight">{exam.title}</CardTitle>
+                  <CardTitle className="text-4xl font-black text-white leading-none uppercase tracking-tight">IA HEROES PRO 9</CardTitle>
+
                   <CardDescription className="text-zinc-600 text-[10px] font-black uppercase tracking-widest mt-2">{exam.id.split('-')[0].toUpperCase()} • CAMPUS VIRTUAL</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow px-10 pt-6 pb-10 space-y-8">
@@ -120,7 +121,8 @@ export default async function DashboardPage() {
                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest leading-none">
                           {new Date(att.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
                        </span>
-                       <h3 className="text-xl font-black text-white uppercase tracking-tight">{att.exams.title}</h3>
+                       <h3 className="text-xl font-black text-white uppercase tracking-tight">IA HEROES PRO 9</h3>
+
                        <div className="flex items-center space-x-3">
                           <span className={cn(
                             "text-[8px] font-black uppercase px-2 py-0.5 rounded-md tracking-widest",

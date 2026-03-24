@@ -30,7 +30,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
     if (!isTeamEmail && !userEmail.includes('admin')) redirect('/dashboard')
 
     return (
-      <div className="min-h-screen bg-[#111111] flex items-center justify-center p-6 text-white text-center">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-6 text-white text-center">
         <div className="max-w-md w-full space-y-8 p-12 bg-zinc-950 border border-white/[0.05] rounded-[3rem] shadow-3xl overflow-hidden relative group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
           <div className="bg-red-500/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 border border-red-500/20">
@@ -45,7 +45,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
               name="pwd"
               placeholder="••••••••"
               autoFocus
-              className="w-full bg-[#111111] border border-white/10 rounded-2xl h-16 px-6 text-center text-xl font-black focus:border-red-500 outline-none transition-all placeholder:text-zinc-900 selection:bg-red-500/30"
+              className="w-full bg-[var(--background)] border border-white/10 rounded-2xl h-16 px-6 text-center text-xl font-black focus:border-red-500 outline-none transition-all placeholder:text-zinc-900 selection:bg-red-500/30"
             />
             <button 
               type="submit"
@@ -87,7 +87,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#111111] flex flex-col font-sans selection:bg-primary/30 text-white">
+    <div className="min-h-screen bg-[var(--background)] flex flex-col font-sans selection:bg-primary/30 text-white">
       <LogoHeader />
       
       <main className="flex-1 py-16 px-6 md:py-24">

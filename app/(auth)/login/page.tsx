@@ -4,7 +4,7 @@ import { GraduationCap } from 'lucide-react'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#111111] text-white font-sans selection:bg-secondary/30">
+    <div className="min-h-screen flex flex-col bg-[var(--background)] text-white font-sans selection:bg-secondary/30">
       <LogoHeader />
       
       <div className="flex-1 flex flex-col items-center justify-center p-8">
@@ -13,9 +13,6 @@ export default function LoginPage() {
             <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase leading-[0.8] mb-4">
                Portal de <span className="text-primary">Acreditación</span>
             </h1>
-            <p className="text-zinc-200 font-black text-[10px] uppercase tracking-[0.4em] opacity-80 underline decoration-primary/50 underline-offset-8">
-              Learning Heroes
-            </p>
           </div>
         </div>
         

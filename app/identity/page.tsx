@@ -4,7 +4,7 @@ import { GraduationCap } from 'lucide-react'
 
 export default function IdentitySetupPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#111111] font-sans text-white selection:bg-secondary/30">
+    <div className="min-h-screen flex flex-col bg-[var(--background)] font-sans text-white selection:bg-secondary/30">
       <LogoHeader />
       
       <div className="flex-1 flex flex-col items-center justify-center p-8 py-20">

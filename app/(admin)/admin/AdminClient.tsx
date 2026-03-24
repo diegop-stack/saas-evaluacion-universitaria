@@ -59,11 +59,40 @@ export function AdminClient({ initialProfiles }: AdminClientProps) {
     }
   }
 
+  const [importEmails, setImportEmails] = useState('')
+  const [isImporting, setIsImporting] = useState(false)
+
+  const handleImport = async () => {
+    if (!importEmails.trim()) return
+    setIsImporting(true)
+    try {
+      const emails = importEmails.split(/[\n,]+/).map(e => e.trim()).filter(e => e.includes('@'))
+      const res = await fetch('/api/admin/import-users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emails })
+      })
+      
+      if (res.ok) {
+        const data = await res.json()
+        alert(`¡Importación completada! ${data.count} usuarios nuevos añadidos.`)
+        setImportEmails('')
+        router.refresh()
+      } else {
+        alert('Error en la importación.')
+      }
+    } catch (err) {
+      alert('Error de conexión.')
+    } finally {
+      setIsImporting(false)
+    }
+  }
+
   const exportToCSV = () => {
     const headers = ['ID', 'Nombre Completo', 'Email', 'DNI', 'Nacionalidad', 'Intentos', 'Estado']
     const rows = filteredProfiles.map(p => [
       p.id,
-      p.full_name || 'Sin Nombre',
+      `"${p.full_name || 'Sin Nombre'}"`,
       p.email,
       p.dni || '---',
       p.nationality || '---',
@@ -81,7 +110,52 @@ export function AdminClient({ initialProfiles }: AdminClientProps) {
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 pb-20">
+      {/* Bulk Import Section */}
+      <div className="bg-white/[0.02] p-10 rounded-[3rem] border border-white/[0.05] shadow-3xl relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+          <Mail className="h-32 w-32 text-primary" />
+        </div>
+        <div className="relative z-10 space-y-6">
+          <div className="flex items-center space-x-3">
+            <div className="h-4 w-1.5 bg-primary rounded-full shadow-[0_0_10px_rgba(36,63,76,0.8)]" />
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500">Importación Masiva de Alumnos</h2>
+          </div>
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex-1">
+              <textarea 
+                value={importEmails}
+                onChange={(e) => setImportEmails(e.target.value)}
+                placeholder="PEGA AQUÍ LOS EMAILS SEPARADOS POR COMAS O LÍNEAS..."
+                className="w-full h-32 bg-zinc-950/50 border border-white/5 rounded-2xl p-6 text-[11px] font-bold text-zinc-300 placeholder:text-zinc-700 outline-none focus:border-primary/50 transition-all uppercase tracking-widest leading-relaxed resize-none"
+              />
+            </div>
+            <div className="flex flex-col justify-end">
+              <button 
+                onClick={handleImport}
+                disabled={isImporting || !importEmails.trim()}
+                className="h-14 px-10 bg-primary hover:bg-primary/80 disabled:opacity-50 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 transition-all flex items-center justify-center space-x-3 group"
+              >
+                {isImporting ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+                  </div>
+                ) : (
+                  <>
+                    <Users className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                    <span>Importar Lista de Emails</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+          <p className="text-[9px] text-zinc-700 font-bold uppercase tracking-widest pl-1">
+            * ESTO REGISTRARÁ LOS EMAILS EN LA BASE DE DATOS COMO ALUMNOS AUTORIZADOS.
+          </p>
+        </div>
+      </div>
       {/* Search & Export */}
       <div className="flex flex-col md:flex-row gap-6 justify-between items-center bg-white/[0.02] p-8 rounded-[2.5rem] border border-white/[0.03]">
         <div className="relative flex-1 w-full max-w-md">
@@ -91,7 +165,7 @@ export function AdminClient({ initialProfiles }: AdminClientProps) {
             placeholder="BUSCAR POR NOMBRE, EMAIL O DNI..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#111111] border border-white/5 rounded-2xl h-14 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest focus:border-primary outline-none transition-all placeholder:text-zinc-400"
+            className="w-full bg-[var(--background)] border border-white/5 rounded-2xl h-14 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest focus:border-primary outline-none transition-all placeholder:text-zinc-400"
           />
         </div>
         
