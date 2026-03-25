@@ -20,10 +20,10 @@ export function RulesDashboardOverlay({ userProfile }: RulesDashboardOverlayProp
   const router = useRouter()
 
   useEffect(() => {
-    if (!userProfile.accepted_policies) {
+    if (userProfile && !userProfile.accepted_policies) {
       setShowModal(true)
     }
-  }, [userProfile.accepted_policies])
+  }, [userProfile?.accepted_policies])
 
   const handleAccept = async () => {
     setIsAccepting(true)

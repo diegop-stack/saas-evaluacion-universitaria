@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 import { getSession } from '@/lib/session'
 import { NextResponse } from 'next/server'
 
@@ -9,7 +9,7 @@ export async function POST() {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   }
 
-  const supabase = await createClient()
+  const supabase = supabaseAdmin
 
   // Actualizamos el perfil para marcar que ha aceptado las políticas
   const { error } = await supabase
@@ -18,7 +18,7 @@ export async function POST() {
         accepted_policies: true,
         policies_accepted_at: new Date().toISOString()
     })
-    .eq('email', session.email)
+    .ilike('email', session.email)
 
   if (error) {
     console.error('Error al aceptar políticas:', error)

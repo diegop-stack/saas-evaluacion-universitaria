@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils'
 import { getSession } from '@/lib/session'
 import { LogoHeader } from '@/components/layout/LogoHeader'
 import { RulesDashboardOverlay } from '@/components/dashboard/RulesDashboardOverlay'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export default async function DashboardPage() {
   const session = await getSession()
@@ -25,13 +26,26 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  const supabase = await createClient()
+  const supabase = supabaseAdmin
 
+  // Usamos el cliente admin para garantizar que encontramos al usuario 
+  // incluso si RLS o la latencia de propagación de Supabase están dando problemas en Vercel (fra1)
   const { data: profile } = await supabase
     .from('profiles')
     .select('*')
-    .eq('email', session.email)
+    .ilike('email', session.email)
     .single()
+
+  // Si no hay perfil en la BD pero sí sesión, algo va mal (borrado manual o error)
+  if (!profile) {
+    console.error('Sesión válida pero perfil no encontrado para:', session.email)
+    redirect('/login')
+  }
+
+  // Si el perfil existe pero no tiene nombre/dni, debe acreditarse primero
+  if (!profile.full_name || !profile.dni || !profile.nationality) {
+    redirect('/identity')
+  }
 
   const isAdmin = session?.email?.toLowerCase()?.includes('learningheroes.com')
 
