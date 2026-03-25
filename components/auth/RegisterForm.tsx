@@ -31,23 +31,35 @@ export function RegisterForm() {
     setIsLoading(true)
 
     try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('is_authorized')
-        .eq('email', email)
-        .single()
+      const normalizedEmail = email.trim().toLowerCase()
+      const res = await fetch('/api/auth/check-authorization', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: normalizedEmail }),
+      })
 
-      if (error || !profile?.is_authorized) {
-        toast.error('Tu email no está registrado en el programa o no está autorizado.')
+      const data = await res.json()
+
+      if (!res.ok) {
+        if (res.status === 404) {
+          toast.error('Este email no está en nuestra lista de alumnos. Contacta con soporte.')
+        } else if (res.status === 403) {
+          toast.error('Tu email está registrado pero aún no ha sido autorizado para el examen.')
+        } else {
+          toast.error(data.error || 'Error al verificar acceso.')
+        }
         setIsLoading(false)
         return
       }
 
-      setIsAuthorized(true)
-      setStep(2)
-      toast.success('Email verificado. Completa tus datos para el diploma.')
+      if (data.authorized) {
+        setIsAuthorized(true)
+        setStep(2)
+        toast.success('Paso 1 completado. Ahora configura tu contraseña para el diploma.')
+      }
+
     } catch (error) {
-      toast.error('Ocurrió un error al verificar el email')
+      toast.error('Ocurrió un error inesperado al verificar.')
     } finally {
       setIsLoading(false)
     }
@@ -64,8 +76,9 @@ export function RegisterForm() {
     setIsLoading(true)
 
     try {
+      const normalizedEmail = email.trim().toLowerCase()
       const { error: signUpError } = await supabase.auth.signUp({
-        email,
+        email: normalizedEmail,
         password,
         options: {
           data: {

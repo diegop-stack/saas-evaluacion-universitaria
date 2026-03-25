@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   let { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('*')
-    .eq('email', normalizedEmail)
+    .ilike('email', normalizedEmail)
     .single()
 
   // Si no está en la base de datos y es del equipo, lo autorizamos/creamos automáticamente

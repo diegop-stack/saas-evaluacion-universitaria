@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         nationality: nationality, 
         dni: dni 
     })
-    .eq('email', session.email)
+    .ilike('email', session.email)
     .select()
     .single()
 

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { LogOut } from 'lucide-react'
+import { LogOut, LifeBuoy } from 'lucide-react'
 import { useRouter, usePathname } from 'next/navigation'
 
 export function LogoHeader() {
@@ -41,6 +41,15 @@ export function LogoHeader() {
             <span className="text-[9px] text-zinc-400 font-black uppercase tracking-widest leading-none mb-1">Certificación Oficial</span>
             <span className="text-[10px] text-primary font-black uppercase tracking-tight">IA Heroes Pro 2026</span>
         </div>
+
+        <Link 
+          href="https://programas.learningheroes.com/soporte/alumnado"
+          target="_blank"
+          className="hidden md:flex items-center space-x-2 px-4 py-2 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl transition-all group"
+        >
+          <LifeBuoy className="h-4 w-4 text-zinc-400 group-hover:text-primary transition-colors" />
+          <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-900 transition-colors">Soporte</span>
+        </Link>
         <Image 
           src="/logos/logo-university.png" 
           alt="Western Europe University" 

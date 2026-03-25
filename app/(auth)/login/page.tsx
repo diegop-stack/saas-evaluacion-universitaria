@@ -1,6 +1,8 @@
 import { AccessForm } from '@/components/auth/AccessForm'
 import { LogoHeader } from '@/components/layout/LogoHeader'
-import { GraduationCap } from 'lucide-react'
+import { GraduationCap, LifeBuoy } from 'lucide-react'
+import { LoginFAQs } from '@/components/auth/LoginFAQs'
+import Link from 'next/link'
 
 export default function LoginPage() {
   return (
@@ -18,15 +20,27 @@ export default function LoginPage() {
         
         <div className="w-full max-w-sm">
           <AccessForm />
-          <div className="mt-12 text-center space-y-4">
-             <p className="text-[10px] text-white/50 font-black uppercase tracking-[0.3em] leading-relaxed">
-               ACCESO RESTRINGIDO PARA ALUMNOS MATRICULADOS
-             </p>
-             <div className="h-[1px] w-12 bg-zinc-900 mx-auto" />
-             <p className="text-[9px] text-zinc-800 font-black uppercase tracking-[0.2em]">
-               © {new Date().getFullYear()} LEARNING HEROES UNIVERSITY
-             </p>
-          </div>
+        </div>
+        
+        <div className="w-full max-w-4xl px-8 mt-6">
+           <LoginFAQs />
+        </div>
+
+        <div className="mt-20 pb-20 text-center flex flex-col items-center space-y-8">
+           <Link 
+             href="https://programas.learningheroes.com/soporte/alumnado"
+             target="_blank"
+             className="inline-flex items-center space-x-3 px-8 h-14 bg-zinc-950 border border-white/5 hover:border-primary/50 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all shadow-2xl group"
+           >
+             <LifeBuoy className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform" />
+             <span>Soporte al Alumno</span>
+           </Link>
+
+           <div className="h-[1px] w-24 bg-zinc-900 mx-auto" />
+           
+           <p className="text-[10px] text-white/40 font-black uppercase tracking-[0.4em]">
+             © {new Date().getFullYear()} LEARNING HEROES UNIVERSITY • WESTERN EUROPEAN UNIVERSITY
+           </p>
         </div>
       </div>
     </div>

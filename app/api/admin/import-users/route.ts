@@ -18,14 +18,15 @@ export async function POST(req: Request) {
 
     const supabase = await createClient()
 
-    // Insertar cada email en profiles si no existe
+    // Insertar cada email en profiles si no existe y marcarlos como autorizados
     const inserts = emails.map(email => ({
-      email: email.toLowerCase(),
+      email: email.trim().toLowerCase(),
+      is_authorized: true
     }))
 
     const { data, error } = await supabase
       .from('profiles')
-      .upsert(inserts, { onConflict: 'email', ignoreDuplicates: true })
+      .upsert(inserts, { onConflict: 'email' })
       .select()
 
     if (error) {

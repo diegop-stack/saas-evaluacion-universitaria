@@ -22,8 +22,9 @@ export function LoginForm() {
     setIsLoading(true)
 
     try {
+      const normalizedEmail = email.trim().toLowerCase()
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: normalizedEmail,
         password,
       })
 

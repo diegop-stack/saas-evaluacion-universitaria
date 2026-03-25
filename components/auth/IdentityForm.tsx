@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
 import { AlertCircle, ShieldCheck, ArrowRight } from 'lucide-react'
+import { RulesModal } from './RulesModal'
 
 export function IdentityForm() {
   const [fullName, setFullName] = useState('')
@@ -16,6 +17,7 @@ export function IdentityForm() {
   const [dni, setDni] = useState('')
   const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isRulesOpen, setIsRulesOpen] = useState(false)
   
   const router = useRouter()
 
@@ -38,7 +40,7 @@ export function IdentityForm() {
 
       if (res.ok) {
         toast.success('¡Identificación completada!')
-        router.push('/dashboard')
+        setIsRulesOpen(true)
       } else {
         const data = await res.json()
         toast.error(data.error || 'Ocurrió un error al guardar tus datos.')
@@ -82,7 +84,7 @@ export function IdentityForm() {
               <Label htmlFor="fullName" className="text-zinc-500 text-[11px] font-black uppercase tracking-widest ml-1">Nombre y Apellidos Completos</Label>
               <Input
                 id="fullName"
-                placeholder="JUAN PÉREZ GARCÍA"
+                placeholder="Juan Pérez García"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -95,7 +97,7 @@ export function IdentityForm() {
                 <Label htmlFor="nationality" className="text-zinc-500 text-[11px] font-black uppercase tracking-widest ml-1">Nacionalidad</Label>
                 <Input
                   id="nationality"
-                  placeholder="ESPAÑOLA"
+                  placeholder="Española"
                   value={nationality}
                   onChange={(e) => setNationality(e.target.value)}
                   required
@@ -106,7 +108,7 @@ export function IdentityForm() {
                 <Label htmlFor="dni" className="text-zinc-500 text-[11px] font-black uppercase tracking-widest ml-1">DNI / NIE / PASAPORTE</Label>
                 <Input
                   id="dni"
-                  placeholder="12345678X"
+                  placeholder="12345678-X"
                   value={dni}
                   onChange={(e) => setDni(e.target.value)}
                   required
@@ -149,6 +151,19 @@ export function IdentityForm() {
               </Button>
         </CardFooter>
       </form>
+
+      <RulesModal 
+        isOpen={isRulesOpen} 
+        onAccept={async () => {
+          try {
+            await fetch('/api/auth/policies', { method: 'POST' })
+            router.push('/dashboard')
+          } catch (e) {
+            router.push('/dashboard') // Fallback a la validación del dashboard
+          }
+        }}
+        userData={{ fullName, dni, nationality }}
+      />
     </Card>
   )
 }

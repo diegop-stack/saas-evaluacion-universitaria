@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { getSession } from '@/lib/session'
 import { LogoHeader } from '@/components/layout/LogoHeader'
+import { RulesDashboardOverlay } from '@/components/dashboard/RulesDashboardOverlay'
 
 export default async function DashboardPage() {
   const session = await getSession()
@@ -49,6 +50,9 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-background flex flex-col font-sans selection:bg-secondary/30">
 
       <LogoHeader />
+
+      {/* Control Legal: Si no ha aceptado políticas, sale el modal */}
+      <RulesDashboardOverlay userProfile={profile} />
       
       <main className="flex-1 py-16 px-6 md:py-24">
         <div className="max-w-5xl mx-auto">

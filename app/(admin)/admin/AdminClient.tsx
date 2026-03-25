@@ -89,13 +89,15 @@ export function AdminClient({ initialProfiles }: AdminClientProps) {
   }
 
   const exportToCSV = () => {
-    const headers = ['ID', 'Nombre Completo', 'Email', 'DNI', 'Nacionalidad', 'Intentos', 'Estado']
+    const headers = ['ID', 'Nombre Completo', 'Email', 'DNI', 'Nacionalidad', 'Políticas Aceptadas', 'Fecha Aceptación', 'Intentos', 'Estado']
     const rows = filteredProfiles.map(p => [
       p.id,
       `"${p.full_name || 'Sin Nombre'}"`,
       p.email,
       p.dni || '---',
       p.nationality || '---',
+      p.accepted_policies ? 'SÍ' : 'NO',
+      p.policies_accepted_at ? new Date(p.policies_accepted_at).toLocaleString() : '---',
       p.exam_attempts?.length || 0,
       p.exam_attempts?.some((a: any) => a.passed) ? 'APROBADO' : 'PENDIENTE'
     ])
@@ -186,6 +188,7 @@ export function AdminClient({ initialProfiles }: AdminClientProps) {
               <tr className="border-b border-white/[0.05] bg-white/[0.02]">
                 <th className="px-8 py-6 text-[9px] font-black text-zinc-300 uppercase tracking-[0.2em]">Alumno / Identidad</th>
                 <th className="px-8 py-6 text-[9px] font-black text-zinc-300 uppercase tracking-[0.2em]">DNI / Nac.</th>
+                <th className="px-8 py-6 text-[9px] font-black text-zinc-300 uppercase tracking-[0.2em] text-center">Políticas</th>
                 <th className="px-8 py-6 text-[9px] font-black text-zinc-300 uppercase tracking-[0.2em] text-center">Intentos</th>
                 <th className="px-8 py-6 text-[9px] font-black text-zinc-300 uppercase tracking-[0.2em] text-center">Status Final</th>
                 <th className="px-8 py-6 text-[9px] font-black text-zinc-300 uppercase tracking-[0.2em] text-right">Acciones</th>
@@ -214,6 +217,19 @@ export function AdminClient({ initialProfiles }: AdminClientProps) {
                             <Globe className="h-3 w-3 mr-2 opacity-50" /> {profile.nationality || 'NO IDENT.'}
                           </div>
                        </div>
+                    </td>
+                    <td className="px-8 py-8 text-center border-x border-white/[0.02]">
+                       {profile.accepted_policies ? (
+                         <div className="flex flex-col items-center justify-center space-y-1">
+                            <ShieldCheck className="h-5 w-5 text-primary" />
+                            <span className="text-[7px] font-black text-primary uppercase tracking-tighter">Aceptado</span>
+                         </div>
+                       ) : (
+                         <div className="flex flex-col items-center justify-center space-y-1 opacity-20">
+                            <AlertTriangle className="h-5 w-5 text-zinc-500" />
+                            <span className="text-[7px] font-black text-zinc-500 uppercase tracking-tighter">Pendiente</span>
+                         </div>
+                       )}
                     </td>
                     <td className="px-8 py-8 text-center">
                        <span className="text-xl font-black tabular-nums">{profile.exam_attempts?.length || 0}</span>

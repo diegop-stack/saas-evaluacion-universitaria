@@ -25,10 +25,11 @@ export async function POST(request: Request) {
   for (const student of students) {
     try {
       // Intentar actualizar si existe, o insertar si no
+      const normalizedEmail = student.email.trim().toLowerCase()
       const { data, error } = await supabase
         .from('profiles')
         .upsert({
-          email: student.email,
+          email: normalizedEmail,
           full_name: student.full_name,
           is_authorized: true
         }, { onConflict: 'email' })
