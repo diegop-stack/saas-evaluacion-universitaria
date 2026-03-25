@@ -2,6 +2,8 @@ import { IdentityForm } from '@/components/auth/IdentityForm'
 import { LogoHeader } from '@/components/layout/LogoHeader'
 import { GraduationCap } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function IdentitySetupPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[var(--background)] font-sans text-white selection:bg-secondary/30">

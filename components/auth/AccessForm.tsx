@@ -31,9 +31,9 @@ export function AccessForm() {
         toast.success('¡Acceso verificado!')
         // Si no tiene nombre registrado, le mandamos a identidad
         if (!data.hasIdentity) {
-          router.push('/identity')
+          window.location.href = '/identity'
         } else {
-          router.push('/dashboard')
+          window.location.href = '/dashboard'
         }
       } else {
         toast.error(data.error || 'No tienes acceso autorizado con este email.')

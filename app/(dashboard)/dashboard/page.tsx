@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,26 +18,28 @@ import { LogoHeader } from '@/components/layout/LogoHeader'
 import { RulesDashboardOverlay } from '@/components/dashboard/RulesDashboardOverlay'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardPage() {
   const session = await getSession()
 
   if (!session) {
+    console.log('Dashboard: No hay sesión, redirigiendo a /login')
     redirect('/login')
   }
 
   const supabase = supabaseAdmin
 
   // Usamos el cliente admin para garantizar que encontramos al usuario 
-  // incluso si RLS o la latencia de propagación de Supabase están dando problemas en Vercel (fra1)
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
     .ilike('email', session.email)
     .single()
 
-  // Si no hay perfil en la BD pero sí sesión, algo va mal (borrado manual o error)
-  if (!profile) {
-    console.error('Sesión válida pero perfil no encontrado para:', session.email)
+  if (profileError || !profile) {
+    console.error('Dashboard: Sesión válida pero perfil no encontrado para:', session.email, profileError)
+    // Intentamos no redirigir si es un error temporal de Supabase, pero por ahora mantenemos el guard
     redirect('/login')
   }
 

@@ -157,9 +157,9 @@ export function IdentityForm() {
         onAccept={async () => {
           try {
             await fetch('/api/auth/policies', { method: 'POST' })
-            router.push('/dashboard')
+            window.location.href = '/dashboard'
           } catch (e) {
-            router.push('/dashboard') // Fallback a la validación del dashboard
+            window.location.href = '/dashboard' // Fallback a la validación del dashboard
           }
         }}
         userData={{ fullName, dni, nationality }}
