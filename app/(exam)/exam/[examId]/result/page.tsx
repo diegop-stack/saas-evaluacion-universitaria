@@ -70,7 +70,7 @@ export default async function ResultPage({ searchParams }: PageProps) {
                   {isAnnulled 
                     ? 'Se han detectado comportamientos irregulares durante la prueba.' 
                     : isPassed 
-                    ? `Has completado satisfactoriamente el programa de certificación.`
+                    ? `Durante las próximas semanas o meses, la universidad te reenviará a tu mismo correo electrónico el diploma oficial después de las revisiones pertinentes. ¡Enhorabuena!`
                     : 'No has alcanzado la puntuación mínima necesaria para acreditarse.'}
                </p>
             </div>
@@ -119,7 +119,7 @@ export default async function ResultPage({ searchParams }: PageProps) {
                     ¡ENHORABUENA! HAS SUPERADO EL RETO.
                   </p>
                   <p className="max-w-xl mx-auto text-primary text-xl font-bold leading-relaxed mb-6 relative z-10 italic">
-                    "Perfecto. En próximos meses la universidad te enviará a tu correo electrónico tu título universitario oficial."
+                    "Durante las próximas semanas o meses, la universidad te reenviará a tu mismo correo electrónico el diploma oficial después de las revisiones pertinentes. ¡Enhorabuena!"
                   </p>
                   <div className="h-[1px] w-40 bg-primary/20 mx-auto mb-8" />
                   <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.5em] relative z-10">

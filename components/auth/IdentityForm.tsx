@@ -84,7 +84,7 @@ export function IdentityForm() {
               <Label htmlFor="fullName" className="text-zinc-500 text-[11px] font-black uppercase tracking-widest ml-1">Nombre y Apellidos Completos</Label>
               <Input
                 id="fullName"
-                placeholder="Juan Pérez García"
+                placeholder="Nombre y Apellidos"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -97,7 +97,7 @@ export function IdentityForm() {
                 <Label htmlFor="nationality" className="text-zinc-500 text-[11px] font-black uppercase tracking-widest ml-1">Nacionalidad</Label>
                 <Input
                   id="nationality"
-                  placeholder="Española"
+                  placeholder="Nacionalidad"
                   value={nationality}
                   onChange={(e) => setNationality(e.target.value)}
                   required
@@ -108,7 +108,7 @@ export function IdentityForm() {
                 <Label htmlFor="dni" className="text-zinc-500 text-[11px] font-black uppercase tracking-widest ml-1">DNI / NIE / PASAPORTE</Label>
                 <Input
                   id="dni"
-                  placeholder="12345678-X"
+                  placeholder="DNI / NIE / Pasaporte"
                   value={dni}
                   onChange={(e) => setDni(e.target.value)}
                   required
