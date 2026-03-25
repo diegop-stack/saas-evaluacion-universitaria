@@ -20,7 +20,7 @@ export default async function ResultPage({ searchParams }: PageProps) {
   // Obtener detalles del intento y sus respuestas
   const { data: attempt, error: attemptError } = await supabase
     .from('exam_attempts')
-    .select('*, exams(*), exam_responses(*, exam_questions(question_text))')
+    .select('*, exams(*), exam_responses(*, exam_questions(question_text, options, correct_answer))')
     .eq('id', attemptId)
     .single()
 
@@ -163,26 +163,25 @@ export default async function ResultPage({ searchParams }: PageProps) {
                         )}
                       </div>
                     </summary>
-                    <div className="px-10 pb-8 pt-2 space-y-4 border-t border-white/[0.02] bg-black/20">
-                       <div className="flex flex-col space-y-2">
-                          <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Tu Respuesta</span>
-                          <p className={cn(
-                            "text-sm font-bold uppercase tracking-tight",
-                            resp.is_correct ? "text-primary" : "text-red-500"
-                          )}>
-                             {resp.selected_option}
-                          </p>
-                       </div>
-                       {!resp.is_correct && (
+                      <div className="px-10 pb-8 pt-2 space-y-4 border-t border-white/[0.02] bg-black/20">
                          <div className="flex flex-col space-y-2">
-                            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Respuesta Correcta</span>
-                            <p className="text-sm font-bold text-zinc-200 uppercase tracking-tight">
-                               {/* Aquí idealmente mostraríamos la respuesta correcta si la tuviéramos en la query */}
-                               {resp.correct_option || "Consultar material oficial"}
+                            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Tu Respuesta</span>
+                            <p className={cn(
+                              "text-sm font-bold uppercase tracking-tight",
+                              resp.is_correct ? "text-primary" : "text-red-500"
+                            )}>
+                               {(resp.exam_questions.options as string[])[resp.user_answer] || "Sin respuesta"}
                             </p>
                          </div>
-                       )}
-                    </div>
+                         {!resp.is_correct && (
+                           <div className="flex flex-col space-y-2">
+                              <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Respuesta Correcta</span>
+                              <p className="text-sm font-bold text-zinc-200 uppercase tracking-tight">
+                                 {(resp.exam_questions.options as string[])[resp.exam_questions.correct_answer] || "Consultar material oficial"}
+                              </p>
+                           </div>
+                         )}
+                      </div>
                   </details>
                 ))}
               </div>

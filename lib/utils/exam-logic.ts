@@ -12,7 +12,7 @@ export async function getExamData(examId: string) {
   const { data: profile } = await supabase
     .from('profiles')
     .select('*')
-    .eq('email', session.email)
+    .ilike('email', session.email)
     .single()
 
   if (!profile) throw new Error('Perfil no encontrado')

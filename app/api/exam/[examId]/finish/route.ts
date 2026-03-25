@@ -46,48 +46,39 @@ export async function POST(
     })
   }
 
-  // 4. Calcular puntuación y guardar respuestas de forma secuencial para máxima seguridad
+  // 4. Calcular puntuación y guardar respuestas de forma óptima por lotes
   let score = 0
   const totalQuestions = attempt.exams.question_count || 30
   const questionIds = Object.keys(finalResponsesMap)
+  const responseInserts = []
 
-  // Guardamos las respuestas en la DB
   for (const qId of questionIds) {
     const userAnswer = finalResponsesMap[qId]
     const dbQuestion = questions.find(q => q.id === qId)
     
-    if (!dbQuestion) continue // Pregunta no pertenece a este examen
+    if (!dbQuestion) continue 
 
     const isCorrect = userAnswer === Number(dbQuestion.correct_answer)
     if (isCorrect) score++
 
-    // Upsert manual (más seguro que confiar en políticas de RLS o conflictos)
-    const { data: existing } = await supabase
-      .from('exam_responses')
-      .select('id')
-      .eq('attempt_id', attemptId)
-      .eq('question_id', qId)
-      .maybeSingle()
+    responseInserts.push({
+      attempt_id: attemptId,
+      question_id: qId,
+      user_answer: userAnswer,
+      is_correct: isCorrect,
+      answered_at: new Date().toISOString()
+    })
+  }
 
-    if (existing) {
-      await supabase
-        .from('exam_responses')
-        .update({
-          user_answer: userAnswer,
-          is_correct: isCorrect,
-          answered_at: new Date().toISOString()
-        })
-        .eq('id', existing.id)
-    } else {
-      await supabase
-        .from('exam_responses')
-        .insert({
-          attempt_id: attemptId,
-          question_id: qId,
-          user_answer: userAnswer,
-          is_correct: isCorrect,
-          answered_at: new Date().toISOString()
-        })
+  // Guardado masivo en una sola petición (Aprovechando la restricción UNIQUE que añadimos)
+  if (responseInserts.length > 0) {
+    const { error: upsertError } = await supabase
+      .from('exam_responses')
+      .upsert(responseInserts, { onConflict: 'attempt_id,question_id' })
+    
+    if (upsertError) {
+      console.error('Error batch upserting responses:', upsertError)
+      return NextResponse.json({ error: 'Error al procesar respuestas' }, { status: 500 })
     }
   }
 
