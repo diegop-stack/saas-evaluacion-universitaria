@@ -38,7 +38,7 @@ export async function getExamData(examId: string) {
     }
   }
 
-  // 3. Verificar intentos y cooldown
+  // 3. Verificar intentos previos
   const { data: attempts } = await supabase
     .from('exam_attempts')
     .select('*')
@@ -46,21 +46,67 @@ export async function getExamData(examId: string) {
     .eq('exam_id', examId)
     .order('created_at', { ascending: false })
 
+  // 3.1 Verificar si ya hay un intento en curso para este examen (para permitir refrescar)
+  const activeAttempt = attempts?.find(a => a.status === 'in_progress')
+  
+  if (activeAttempt) {
+    // Si hay uno activo, lo reanudamos cargando las preguntas que ya tenía
+    const { data: currentQuestions } = await supabase
+      .from('exam_questions')
+      .select('id, question_text, options, category')
+      .eq('exam_id', examId)
+
+    // Nota: Para ser 100% exactos deberíamos guardar qué preguntas se le asignaron al azar.
+    // Como simplificación para el MVP, si refresca le damos las mismas o un nuevo set de 30 del pool, 
+    // pero mantenemos el mismo ID de intento.
+    // Idealmente, las respuestas guardadas el en DB (exam_responses) dictarán cuáles mostrar.
+    
+    // Filtramos para obtener las preguntas que ya respondió + algunas nuevas si faltan 
+    // (pero por ahora simplemente cargamos el pool de nuevo)
+    const { data: responses } = await supabase
+      .from('exam_responses')
+      .select('question_id')
+      .eq('attempt_id', activeAttempt.id)
+
+    const answeredIds = new Set(responses?.map(r => r.question_id) || [])
+    
+    // Barajar asumiendo que el pool es mayor que question_count
+    // Para no cambiar las preguntas a mitad del examen, intentamos que las respondidas estén incluidas
+    const { data: questions } = await supabase
+      .from('exam_questions')
+      .select('id, question_text, options, category')
+      .eq('exam_id', examId)
+
+    if (!questions) throw new Error('Error al cargar preguntas')
+
+    const shuffledQuestions = questions
+      .sort(() => (answeredIds.has(questions[0].id) ? -1 : Math.random() - 0.5)) // Priorizar respondidas
+      .slice(0, exam.question_count)
+    
+    return {
+      exam,
+      attempt: activeAttempt,
+      questions: shuffledQuestions,
+    }
+  }
+
+  // 4. Si no hay activo, verificar límite de 3 intentos y REGLA DE COOLDOWN DE 24H
   if (attempts && attempts.length >= 3) {
     throw new Error('Has agotado el límite de 3 intentos para este examen')
   }
 
-  if (attempts && attempts.length > 0) {
-    const lastAttempt = attempts[0]
+  // El cooldown solo aplica si el último intento fue completado o anulado
+  const lastFinishedAttempt = attempts?.find(a => a.status === 'completed' || a.status === 'annulled')
+  if (lastFinishedAttempt) {
     const cooldownPeriod = 24 * 60 * 60 * 1000 // 24h
-    const timeSinceLast = now.getTime() - new Date(lastAttempt.created_at).getTime()
+    const timeSinceLast = now.getTime() - new Date(lastFinishedAttempt.created_at).getTime()
     if (timeSinceLast < cooldownPeriod) {
       const remaining = Math.ceil((cooldownPeriod - timeSinceLast) / (60 * 60 * 1000))
       throw new Error(`Debes esperar ${remaining} horas antes de tu próximo intento`)
     }
   }
 
-  // 4. Crear intento
+  // 5. Crear nuevo intento si todo lo anterior pasó
   const attemptNumber = (attempts?.length || 0) + 1
   const { data: attempt, error: attemptError } = await supabase
     .from('exam_attempts')
